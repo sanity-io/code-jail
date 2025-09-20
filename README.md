@@ -48,13 +48,13 @@ Git-based install (recommended for early testers):
 
 ```bash
 # Using pipx (recommended - installs in isolated environment)
-pipx install 'git+https://github.com/simen/code-jail.git@main'
+pipx install 'git+https://github.com/simen/code-jail.git@v0.0.1'
 
 # Using uv tool
-uv tool install 'git+https://github.com/simen/code-jail.git@main'
+uv tool install 'git+https://github.com/simen/code-jail.git@v0.0.1'
 
 # Using pip (in a virtual environment)
-pip install 'git+https://github.com/simen/code-jail.git@main'
+pip install 'git+https://github.com/simen/code-jail.git@v0.0.1'
 ```
 
 Pin to a specific commit for reproducibility (optional):
