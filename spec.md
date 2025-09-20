@@ -71,14 +71,10 @@ Examples:
 
 **Purpose:** Create a ready-to-run devcontainer in the current folder and adapt it to the project via a Codex instruction.
 
-**Inputs (two modes):**
+**Inputs:**
 
-* **Promptless / Non-interactive:** `jail init "a python cli"`
-
-  * The free-text string is the **platform requirements prompt**.
-* **Interactive:** `jail init`
-
-  * Guided Q\&A (see flow below).
+* `jail init "<high-level description>"` — provide a single free‑text prompt (preferred).
+* `jail init` — interactive: asks for one high‑level description (one or two sentences).
 
 **Behavior:**
 
@@ -90,14 +86,7 @@ Examples:
    * `.devcontainer/jail.config.json` (jail metadata; see config).
 2. **Gather requirements**:
 
-   * If a prompt was provided on the CLI, skip questions.
-   * Else, prompt user for:
-
-     * Project type (quick pick: Node/TS, Python, Rust, Go, “Mixed/Monorepo”, “Other”).
-     * Language/tooling specifics (e.g., Python version, Node version, package managers).
-     * Build tools (poetry/uv/pipx, pnpm/yarn/npm, cargo, go).
-     * Extra services (Postgres, Redis) to wire via `docker-compose` (future, optional).
-     * Any special OS packages or CLIs.
+   * Use the provided prompt or collect a single high‑level description interactively.
 3. **Adapt via Codex (host):**
 
    * Compose a **Codex instruction** from the user inputs (or CLI prompt).
@@ -112,16 +101,14 @@ Examples:
 
 * `--image <name[:tag]>` – start from a base image (e.g., `mcr.microsoft.com/devcontainers/base:ubuntu`).
 * `--node <ver>`, `--python <ver>`, `--go <ver>`, etc. — quick version pins (optional conveniences).
-* `--no-codex-adapt` — skip Codex adaptation step; just drop a vanilla template.
+* `--no-ai-on-init` — skip AI adaptation during init; just drop a vanilla template.
 * `--overwrite` — overwrite existing `.devcontainer/` (default: refuse if exists).
 * `--name <label>` — set container name prefix (defaults to folder name).
 
 **Interactive flow (example):**
 
-* Q1: *What type of project is this?* `[Python | Node/TS | Rust | Go | Mixed | Other]`
-* Q2: *Tell us the platform requirements (e.g., specific tooling, DBs, CLIs).* `[free text]`
-* Q3: *Any services to include later (e.g., Postgres)?* `[y/N]` (initial version: always “N”)
-* Confirm summary → run Codex adaptation → show diff preview (if `--dry-run`, only show).
+* Prompt: “Describe at a high level what you plan to do (one or two sentences).”
+* Run Codex adaptation → show plan/logs (if `--dry-run`, only show planned writes).
 
 **Outputs:**
 

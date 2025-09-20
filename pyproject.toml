@@ -3,10 +3,10 @@ requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
-name = "jail"
+name = "code-jail"
 version = "0.0.1"
 description = "Spin up a devcontainer \"jail\" for coding agents"
-readme = "AGENTS.md"
+readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Proprietary" }
 authors = [{ name = "Maintainers" }]
@@ -61,4 +61,3 @@ disallow_untyped_defs = true
 no_implicit_optional = true
 strict_equality = true
 ignore_missing_imports = true
-

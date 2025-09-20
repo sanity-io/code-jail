@@ -3,6 +3,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 from typing import Optional, Tuple
+import shutil
+import subprocess
 
 import typer
 from rich.console import Console
@@ -59,6 +61,11 @@ def cmd_init(  # noqa: D401
     non_interactive: bool = typer.Option(
         False, "--non-interactive", help="Fail if an input would be prompted"
     ),
+    no_ai_on_init: bool = typer.Option(
+        False,
+        "--no-ai-on-init",
+        help="Skip AI adaptation during init; only scaffold the template",
+    ),
     validate: bool = typer.Option(
         True, "--validate/--no-validate", help="Validate with Dev Containers CLI"
     ),
@@ -98,26 +105,24 @@ def cmd_init(  # noqa: D401
         update_config_prompt(cwd, prompt)
     console.print("[green]Devcontainer created at .devcontainer/[/]")
 
+    # Optional Codex adaptation (host) — keep it simple and low-friction
+    if not no_ai_on_init:
+        if prompt:
+            _adapt_with_codex_host(cwd, prompt, verbose=verbose, non_interactive=non_interactive)
+        else:
+            console.print(
+                "[yellow]No prompt provided; skipping Codex adaptation. Re-run with a prompt to adapt.[/]"
+            )
+
     if validate:
         _validate_devcontainer(cwd, verbose=verbose)
 
 
 def interactive_prompt() -> str:
-    console.print("Let's capture platform requirements for adaptation (v1 records only).")
-    proj = typer.prompt(
-        "Project type [Python | Node/TS | Rust | Go | Mixed | Other]",
-        default="Python",
-        type=str,
-    )
-    details = typer.prompt(
-        "Language/tooling specifics (versions, package managers, CLIs)", default=""
-    )
-    services = typer.confirm("Any services to include later (e.g., Postgres)?", default=False)
-    summary = f"type={proj}; details={details}; services={'yes' if services else 'no'}"
-    console.print(Panel.fit(summary, title="Summary"))
-    if not typer.confirm("Use this prompt?", default=True):
-        return interactive_prompt()
-    return summary
+    console.print("Describe at a high level what you plan to do.")
+    console.print("E.g., ‘Python CLI with uv; needs sqlite and curl’. One or two sentences.")
+    p = typer.prompt("Platform requirements / plan", default="")
+    return p
 
 
 def _validate_devcontainer(cwd: Path, *, verbose: bool) -> None:
@@ -235,6 +240,45 @@ def _shlex_quote(s: str) -> str:
     if all(c.isalnum() or c in "@%_+=:,./-" for c in s):
         return s
     return "'" + s.replace("'", "'\\''") + "'"
+
+
+def _adapt_with_codex_host(cwd: Path, prompt: str, *, verbose: bool, non_interactive: bool) -> None:
+    """Run host Codex in full-auto to adapt .devcontainer to the prompt.
+
+    Defensive behavior:
+    - If Codex CLI not found on host, print a note and skip.
+    - If running with --non-interactive and no prompt, skip (handled by caller).
+    """
+    codex = shutil.which("codex")
+    if not codex:
+        console.print(
+            "[yellow]Codex CLI not found on host; skipping adaptation. Install @openai/codex or run `jail codex` inside the container to adapt later.[/]"
+        )
+        return
+
+    instruction = (
+        "Adapt the Dev Container configuration for this repository based on the following high-"
+        "level requirements. Modify only files under .devcontainer (Dockerfile, devcontainer.json,"
+        " postCreateCommand.sh, jail.config.json). Keep a non-root user 'dev' and retain the"
+        " read-only ~/.codex host mount. Ensure the final container has necessary OS packages,"
+        " language/tooling versions, and codex installed. Keep changes minimal and predictable.\n\n"
+        f"Requirements: {prompt}\n"
+    )
+
+    cmd = [codex, "exec", "--full-auto", "-C", str(cwd), instruction]
+    if verbose:
+        console.print("Running host Codex adaptation:")
+        console.print(" ".join(_shlex_quote(c) for c in cmd))
+    try:
+        rc = subprocess.call(cmd)
+        if rc == 0:
+            console.print("[green]Codex adaptation completed.[/]")
+        else:
+            console.print(
+                f"[yellow]Codex adaptation exited with code {rc}. You can re-run later or edit manually.[/]"
+            )
+    except Exception as e:  # pragma: no cover - defensive
+        console.print(f"[yellow]Codex adaptation failed: {e}[/]")
 
 
 def main() -> None:
