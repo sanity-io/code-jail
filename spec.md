@@ -126,7 +126,7 @@ Examples:
 * If `.devcontainer/` missing → instruct to run `jail init`.
 * Ensures devcontainer is running (start if needed).
 * **Runs** `codex` **inside the container** with arguments passed through.
-* codex runs with --dangerously-bypass-approvals-and-sandbox
+* codex runs with `--dangerously-bypass-approvals-and-sandbox` and `--skip-git-repo-check`.
 
 * **Propagates host `~/.codex`** (ephemeral copy) to authenticate.
 

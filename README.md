@@ -2,9 +2,21 @@
 
 **Give your AI coding agents a playground where they (probably) can't break anything important.**
 
-> ⚠️ **Experimental Software**: This is an early experiment in AI-safe development environments. We're actively exploring the best patterns for isolating AI agents. Expect breaking changes and rough edges — but also exciting possibilities!
+> ⚠️ **Experimental Software**: This just a toy project at this moment.
 
-`jail` creates isolated development containers for AI agents like Codex to run wild in — keeping your host system safe while maintaining a productive workflow. One command sets up everything you need.
+I am just tired of hitting "keep going" and "yes keep going" and "ok, run that command". This is not what "human in the loop" was supposed to mean.
+
+So I run my coding agents in --dangerously-move-fast-and-break-tings mode. But that isn't advisible.
+
+There are Docker containers and all that stuff, but I vibe up three experiments a day. No one has time to manage that stuff.
+
+So here is `jail`. You just create a new folder, run `jail init` and answer one question about your intentions. A dev container is magicked up for you.
+
+Then you can do `jail codex` to get an interactive session with codex from inside the jail. It can do whatever it wants there, because it is very unlikely to damage anything important from inside there.
+
+If you need shell, you just `jail`. That's it.
+
+---
 
 ```bash
 # Create a safe workspace and let your AI loose
@@ -78,6 +90,15 @@ jail  # Opens a shell inside the container
 **Run AI agent(s) safely:**
 ```bash
 jail codex
+```
+
+Defaults when running Codex via `jail codex`:
+- Uses the dangerous policy inside the jail (no approvals, no sandbox in-container).
+- Skips Codex git-repo checks by default (`--skip-git-repo-check`) so it works in non‑git folders.
+
+Examples:
+```bash
+jail codex exec "say hello"
 ```
 
 Your `~/.codex` configuration is automatically available (read-only) inside the container, so your API keys work without exposing them to modifications.

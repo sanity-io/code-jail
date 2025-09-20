@@ -121,7 +121,11 @@ def cmd_init(  # noqa: D401
 def interactive_prompt() -> str:
     console.print("Describe at a high level what you plan to do.")
     console.print("E.g., ‘Python CLI with uv; needs sqlite and curl’. One or two sentences.")
-    p = typer.prompt("Platform requirements / plan", default="")
+    console.print("[dim](Leave blank to skip AI adaptation.)[/]")
+    try:
+        p = input("> ").strip()
+    except (EOFError, KeyboardInterrupt):  # pragma: no cover - interactive
+        p = ""
     return p
 
 
@@ -230,7 +234,7 @@ def _codex_command_line(extra: list[str], on_request: bool, workdir: str) -> str
         "rm -rf /home/dev/.codex && mkdir -p /home/dev/.codex && "
         "cp -a /home/dev/.codex-host/. /home/dev/.codex/; fi;"
     )
-    return f"{refresh} cd {workdir} && codex {policy_flag} {user_args}".strip()
+    return f"{refresh} cd {workdir} && codex {policy_flag} --skip-git-repo-check {user_args}".strip()
 
 
 def _shlex_quote(s: str) -> str:
@@ -265,7 +269,7 @@ def _adapt_with_codex_host(cwd: Path, prompt: str, *, verbose: bool, non_interac
         f"Requirements: {prompt}\n"
     )
 
-    cmd = [codex, "exec", "--full-auto", "-C", str(cwd), instruction]
+    cmd = [codex, "exec", "--full-auto", "-C", str(cwd), "--skip-git-repo-check", instruction]
     if verbose:
         console.print("Running host Codex adaptation:")
         console.print(" ".join(_shlex_quote(c) for c in cmd))
