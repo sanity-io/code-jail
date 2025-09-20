@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "adaptedBy": "codex",
+  "lastAdaptPrompt": "",
+  "imageBase": "mcr.microsoft.com/devcontainers/base:ubuntu"
+}
+

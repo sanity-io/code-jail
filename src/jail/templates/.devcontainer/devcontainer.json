@@ -1,0 +1,10 @@
+{
+  "name": "jail",
+  "build": { "dockerfile": "Dockerfile" },
+  "remoteUser": "dev",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "mounts": [
+    "source=${localEnv:HOME}/.codex,target=/home/dev/.codex-host,type=bind,consistency=cached,readonly"
+  ],
+  "postCreateCommand": ".devcontainer/postCreateCommand.sh"
+}
