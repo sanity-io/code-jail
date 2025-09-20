@@ -1,8 +1,9 @@
-# jail 🔒 — Safe sandboxes for AI coding agents
+# jail 🔒 — Safe-ish sandboxes for AI coding agents
 
-**Give your AI coding agents a playground where they (probably) can't break anything important.**
+**Give your AI coding agents a playground where they (probably) can't break anything (important).**
 
-> ⚠️ **Experimental Software**: This just a toy project at this moment.
+> 🌊 **Pure Vibes**: This just a toy project at this moment.
+
 
 I am just tired of hitting "keep going" and "yes keep going" and "ok, run that command". This is not what "human in the loop" was supposed to mean.
 
@@ -47,20 +48,26 @@ Git-based install (recommended for early testers):
 
 ```bash
 # Using pipx (recommended - installs in isolated environment)
-pipx install 'git+https://github.com/<org>/<repo>@v0.0.1'
+pipx install 'git+https://github.com/simen/code-jail.git@main'
 
 # Using uv tool
-uv tool install 'git+https://github.com/<org>/<repo>@v0.0.1'
+uv tool install 'git+https://github.com/simen/code-jail.git@main'
 
 # Using pip (in a virtual environment)
-pip install 'git+https://github.com/<org>/<repo>@v0.0.1'
+pip install 'git+https://github.com/simen/code-jail.git@main'
 ```
 
-For development or to track the latest changes:
+Pin to a specific commit for reproducibility (optional):
 
 ```bash
-git clone https://github.com/<org>/<repo>
-cd jail
+pipx install 'git+https://github.com/simen/code-jail.git@8d81e9a'
+```
+
+For local development or to track the latest changes:
+
+```bash
+git clone https://github.com/simen/code-jail
+cd code-jail
 uv sync  # then: uv run jail --help
 ```
 ### 3. Create Your First Jail
@@ -72,13 +79,15 @@ jail init "a Node.js web server with Express"
 
 This creates a `.devcontainer/` folder with everything configured. The container includes Node.js, Python, and Codex pre-installed.
 
-The description is important, because an AI workflow will adapt your container setup to the project you describe. So help it anticipate
+The description is helpful, because an AI workflow will adapt your container setup to the project you describe. So help it anticipate
 your requirements. E.g.
 
 - "A data analytics pipeline in python"
 - "A Next.js app with Sanity for content management"
 - "A terminal based port of Final Fantasy III using Node+Ink"
 - "A visualization of magnetic fields in C/sdl2"
+
+If you omit it, you'll probably be fine too. Jail goes up in a heartbeat, and then you can figure it out from inside jail.
 
 ### 4. Use It
 
@@ -90,15 +99,6 @@ jail  # Opens a shell inside the container
 **Run AI agent(s) safely:**
 ```bash
 jail codex
-```
-
-Defaults when running Codex via `jail codex`:
-- Uses the dangerous policy inside the jail (no approvals, no sandbox in-container).
-- Skips Codex git-repo checks by default (`--skip-git-repo-check`) so it works in non‑git folders.
-
-Examples:
-```bash
-jail codex exec "say hello"
 ```
 
 Your `~/.codex` configuration is automatically available (read-only) inside the container, so your API keys work without exposing them to modifications.
