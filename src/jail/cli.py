@@ -234,7 +234,7 @@ def _codex_command_line(extra: list[str], on_request: bool, workdir: str) -> str
         "rm -rf /home/dev/.codex && mkdir -p /home/dev/.codex && "
         "cp -a /home/dev/.codex-host/. /home/dev/.codex/; fi;"
     )
-    return f"{refresh} cd {workdir} && codex {policy_flag} --skip-git-repo-check {user_args}".strip()
+    return f"{refresh} cd {workdir} && codex {policy_flag} {user_args}".strip()
 
 
 def _shlex_quote(s: str) -> str:

@@ -53,6 +53,42 @@ wheels = [
 ]
 
 [[package]]
+name = "code-jail"
+version = "0.0.1"
+source = { editable = "." }
+dependencies = [
+    { name = "jsonschema" },
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "black" },
+    { name = "isort" },
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "pytest-xdist" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "black", marker = "extra == 'dev'", specifier = ">=24" },
+    { name = "isort", marker = "extra == 'dev'", specifier = ">=5" },
+    { name = "jsonschema", specifier = ">=4,<5" },
+    { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.11" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
+    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=5" },
+    { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3" },
+    { name = "rich", specifier = ">=13,<14" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6" },
+    { name = "typer", specifier = ">=0.12,<1" },
+]
+provides-extras = ["dev"]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 source = { registry = "https://pypi.org/simple" }
@@ -167,42 +203,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/b8/21/1e2a441f74a653a14
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c1/11/114d0a5f4dabbdcedc1125dee0888514c3c3b16d3e9facad87ed96fad97c/isort-6.0.1-py3-none-any.whl", hash = "sha256:2dc5d7f65c9678d94c88dfc29161a320eec67328bc97aad576874cb4be1e9615", size = 94186, upload-time = "2025-02-26T21:13:14.911Z" },
 ]
-
-[[package]]
-name = "jail"
-version = "0.0.1"
-source = { editable = "." }
-dependencies = [
-    { name = "jsonschema" },
-    { name = "rich" },
-    { name = "typer" },
-]
-
-[package.optional-dependencies]
-dev = [
-    { name = "black" },
-    { name = "isort" },
-    { name = "mypy" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "pytest-xdist" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "black", marker = "extra == 'dev'", specifier = ">=24" },
-    { name = "isort", marker = "extra == 'dev'", specifier = ">=5" },
-    { name = "jsonschema", specifier = ">=4,<5" },
-    { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.11" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
-    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=5" },
-    { name = "pytest-xdist", marker = "extra == 'dev'", specifier = ">=3" },
-    { name = "rich", specifier = ">=13,<14" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6" },
-    { name = "typer", specifier = ">=0.12,<1" },
-]
-provides-extras = ["dev"]
 
 [[package]]
 name = "jsonschema"
